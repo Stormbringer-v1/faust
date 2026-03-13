@@ -1,48 +1,12 @@
 version: "3.9"
 
 services:
-  backend:
-    image: python:3.12-slim
-    working_dir: /app
-    command: sh -c "pip install fastapi uvicorn 2>/dev/null && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://faust:faust@postgres:5432/faust
-      - REDIS_URL=redis://redis:6379/0
-    depends_on:
-      - postgres
-      - redis
-    volumes:
-      - ../backend:/app
-
-  frontend:
-    image: node:20-alpine
-    working_dir: /app
-    command: sh -c "echo 'Frontend placeholder - replace with real app'"
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    volumes:
-      - ../frontend:/app
-
-  celery_worker:
-    image: python:3.12-slim
-    working_dir: /app
-    command: sh -c "pip install celery redis 2>/dev/null && celery -A app.core.celery worker --loglevel=info"
-    depends_on:
-      - redis
-      - postgres
-    volumes:
-      - ../backend:/app
-
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: faust
-      POSTGRES_PASSWORD: faust
-      POSTGRES_DB: faust
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
