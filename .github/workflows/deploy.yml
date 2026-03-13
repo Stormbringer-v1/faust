@@ -13,12 +13,12 @@ jobs:
     steps:
       - name: Pull latest code
         run: |
-          cd /root/faust
+          cd /opt/faust
           git pull origin main
 
       - name: Restart services
         run: |
-          cd /root/faust
+          cd /opt/faust
           docker compose -f docker/docker-compose.yml up -d --build
           docker image prune -f
           echo "Deploy complete."
