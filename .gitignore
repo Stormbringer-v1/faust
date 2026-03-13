@@ -40,3 +40,4 @@ htmlcov/
 *.key
 *.cert
 docker/.env
+docker/.env
