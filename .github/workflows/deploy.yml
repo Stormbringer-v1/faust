@@ -1,0 +1,32 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Pull & Restart on VM
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Faust VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: 22
+          script: |
+            cd /root/faust
+            echo "📥 Pulling latest from GitHub..."
+            git pull origin main
+
+            echo "🐳 Restarting services..."
+            docker compose -f docker/docker-compose.yml up -d --build
+
+            echo "🧹 Cleaning up old images..."
+            docker image prune -f
+
+            echo "✅ Deploy complete."
