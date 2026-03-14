@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SeverityDonut } from '../components/dashboard/SeverityDonut';
 import { RiskTrendChart } from '../components/dashboard/RiskTrendChart';
 import { TopAssetsTable } from '../components/dashboard/TopAssetsTable';
@@ -8,6 +9,7 @@ import { useFindings } from '../hooks/useFindings';
 import { useAssets } from '../hooks/useAssets';
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const { selectedProject } = useProject();
   const defaultProjectId = selectedProject?.id;
   
@@ -41,10 +43,16 @@ export default function DashboardPage() {
           <p className="text-slate-500 text-base mt-2">Overview of your security posture</p>
         </div>
         <div className="flex gap-3">
-          <button className="bg-brand-600 text-white font-bold text-sm px-6 h-10 rounded-md hover:opacity-90 transition-opacity flex items-center gap-2">
+          <button
+            onClick={() => navigate('/scans')}
+            className="bg-brand-600 text-white font-bold text-sm px-6 h-10 rounded-md hover:opacity-90 transition-opacity flex items-center gap-2"
+          >
             New Scan
           </button>
-          <button className="bg-white border border-slate-200 text-slate-700 font-medium text-sm px-6 h-10 rounded-md hover:bg-slate-50 transition-colors">
+          <button
+            onClick={() => navigate('/findings')}
+            className="bg-white border border-slate-200 text-slate-700 font-medium text-sm px-6 h-10 rounded-md hover:bg-slate-50 transition-colors"
+          >
             View Findings
           </button>
         </div>

@@ -6,6 +6,7 @@ import FindingsPage from './pages/FindingsPage';
 import AssetsPage from './pages/Assets';
 import ScansPage from './pages/Scans';
 import ReportsPage from './pages/Reports';
+import SettingsPage from './pages/Settings';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { ProjectProvider } from './contexts/ProjectContext';
@@ -38,6 +39,7 @@ function App() {
             <Route path="scans" element={<ScansPage />} />
             <Route path="findings" element={<FindingsPage />} />
             <Route path="reports" element={<ReportsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

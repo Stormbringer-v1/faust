@@ -212,10 +212,17 @@ export default function MainLayout() {
         </nav>
 
         <div className="p-4 border-t border-slate-800">
-          <button className="flex items-center w-full px-4 py-3 text-sm hover:bg-slate-800 hover:text-white rounded-lg transition-colors mb-1">
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              `flex items-center w-full px-4 py-3 text-sm rounded-lg transition-colors mb-1 ${
+                isActive ? 'bg-brand-600 text-white' : 'hover:bg-slate-800 hover:text-white'
+              }`
+            }
+          >
             <Settings className="w-6 h-6 mr-3" />
             Settings
-          </button>
+          </NavLink>
           <button
             onClick={logout}
             className="flex items-center w-full px-4 py-3 text-sm hover:bg-red-900/50 hover:text-red-400 rounded-lg transition-colors text-slate-400"

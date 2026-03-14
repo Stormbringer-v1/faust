@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 
 export function useAssets(projectId?: string) {
@@ -6,24 +6,23 @@ export function useAssets(projectId?: string) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchAssets = useCallback(async () => {
     if (!projectId) return;
-
-    const fetchAssets = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await api.get(`/projects/${projectId}/assets/`);
-        setAssets(response.data);
-      } catch (err: any) {
-        setError(err.response?.data?.detail || 'Failed to fetch assets');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAssets();
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await api.get(`/projects/${projectId}/assets/`);
+      setAssets(response.data);
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'Failed to fetch assets');
+    } finally {
+      setLoading(false);
+    }
   }, [projectId]);
 
-  return { assets, loading, error };
+  useEffect(() => {
+    void fetchAssets();
+  }, [fetchAssets]);
+
+  return { assets, loading, error, refresh: fetchAssets };
 }

@@ -1,7 +1,122 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import api from '../services/api';
 import { useProject } from '../contexts/ProjectContext';
 import { useAssets } from '../hooks/useAssets';
 import { useFindings } from '../hooks/useFindings';
+
+const ASSET_TYPES = ['host', 'domain', 'url', 'cidr', 'cloud_resource'] as const;
+
+function AddAssetModal({ projectId, onClose, onSuccess }: {
+  projectId: string;
+  onClose: () => void;
+  onSuccess: () => void;
+}) {
+  const [name, setName] = useState('');
+  const [assetType, setAssetType] = useState<string>('host');
+  const [identifier, setIdentifier] = useState('');
+  const [description, setDescription] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!identifier.trim()) { setError('Identifier is required.'); return; }
+    setSubmitting(true);
+    setError(null);
+    try {
+      await api.post(`/projects/${projectId}/assets/`, {
+        name: name.trim() || identifier.trim(),
+        asset_type: assetType,
+        identifier: identifier.trim(),
+        description: description.trim() || null,
+      });
+      onSuccess();
+      onClose();
+    } catch (err: any) {
+      const detail = err.response?.data?.detail;
+      setError(typeof detail === 'string' ? detail : 'Failed to create asset.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-bold text-slate-900">Add Asset</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+        </div>
+
+        {error && (
+          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Identifier <span className="text-red-500">*</span></label>
+            <input
+              autoFocus
+              type="text"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
+              placeholder="192.168.1.1, api.example.com, etc."
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Asset Type</label>
+            <select
+              value={assetType}
+              onChange={(e) => setAssetType(e.target.value)}
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/30 bg-white"
+            >
+              {ASSET_TYPES.map((t) => (
+                <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1).replace('_', ' ')}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Name <span className="text-slate-400 font-normal">(optional)</span></label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Defaults to identifier if blank"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Description <span className="text-slate-400 font-normal">(optional)</span></label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              placeholder="Brief note about this asset"
+              className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500/30 resize-none"
+            />
+          </div>
+          <div className="flex gap-3 pt-2">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex-1 py-2 rounded-lg bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 disabled:opacity-50 transition-colors"
+            >
+              {submitting ? 'Adding...' : 'Add Asset'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-2 rounded-lg border border-slate-200 text-slate-600 text-sm hover:bg-slate-50 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 const severityRank: Record<string, number> = {
   critical: 4,
@@ -32,8 +147,9 @@ const parseTags = (tags?: string | null): string[] => {
 export default function AssetsPage() {
   const { selectedProject } = useProject();
   const projectId = selectedProject?.id;
+  const [showAddModal, setShowAddModal] = useState(false);
 
-  const { assets, loading: assetsLoading, error: assetsError } = useAssets(projectId);
+  const { assets, loading: assetsLoading, error: assetsError, refresh } = useAssets(projectId);
   const { findings, loading: findingsLoading } = useFindings(projectId);
 
   const assetRisk = useMemo(() => {
@@ -74,16 +190,32 @@ export default function AssetsPage() {
 
   return (
     <div className="space-y-8">
+      {showAddModal && projectId && (
+        <AddAssetModal
+          projectId={projectId}
+          onClose={() => setShowAddModal(false)}
+          onSuccess={refresh}
+        />
+      )}
+
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Asset Inventory</h1>
           <p className="text-slate-500 mt-1">Track infrastructure assets and their exposure.</p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 font-medium transition-colors">
+          <button
+            title="Import CSV — coming soon"
+            disabled
+            className="px-4 py-2 bg-white border border-slate-300 text-slate-400 rounded-lg font-medium cursor-not-allowed opacity-50"
+          >
             Import CSV
           </button>
-          <button className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium transition-colors">
+          <button
+            onClick={() => setShowAddModal(true)}
+            disabled={!projectId}
+            className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             Add Asset
           </button>
         </div>
