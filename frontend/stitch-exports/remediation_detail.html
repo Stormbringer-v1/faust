@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Remediation Detail - CVE-2023-4911</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container": "#171f33",
+                        "secondary": "#b7c8e1",
+                        "on-secondary-fixed": "#0b1c30",
+                        "surface-container-low": "#131b2e",
+                        "outline-variant": "#3d494d",
+                        "tertiary-container": "#ff7c89",
+                        "on-tertiary": "#67001b",
+                        "primary-container": "#00b6cb",
+                        "tertiary-fixed": "#ffdadb",
+                        "primary-fixed": "#9cf0ff",
+                        "on-primary-fixed": "#001f24",
+                        "on-primary-fixed-variant": "#004f58",
+                        "surface-tint": "#00daf3",
+                        "error": "#ffb4ab",
+                        "outline": "#869398",
+                        "on-tertiary-fixed": "#40000d",
+                        "secondary-fixed-dim": "#b7c8e1",
+                        "secondary-container": "#3a4a5f",
+                        "on-tertiary-fixed-variant": "#92002a",
+                        "on-secondary": "#213145",
+                        "on-error": "#690005",
+                        "on-surface": "#dae2fd",
+                        "secondary-fixed": "#d3e4fe",
+                        "primary-fixed-dim": "#00daf3",
+                        "tertiary": "#ffb2b7",
+                        "on-background": "#dae2fd",
+                        "surface-bright": "#31394d",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-fixed-variant": "#38485d",
+                        "surface": "#0b1326",
+                        "inverse-on-surface": "#283044",
+                        "on-secondary-container": "#a9bad3",
+                        "on-error-container": "#ffdad6",
+                        "surface-dim": "#0b1326",
+                        "error-container": "#93000a",
+                        "surface-container-high": "#222a3d",
+                        "primary": "#00daf3",
+                        "on-tertiary-container": "#7b0022",
+                        "inverse-primary": "#006875",
+                        "on-surface-variant": "#bcc9ce",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-container": "#00424a",
+                        "surface-container-lowest": "#060e20",
+                        "on-primary": "#00363d",
+                        "tertiary-fixed-dim": "#ffb2b7",
+                        "inverse-surface": "#dae2fd",
+                        "background": "#0b1326"
+                    },
+                    fontFamily: {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(49, 57, 77, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b1326; }
+        ::-webkit-scrollbar-thumb { background: #2d3449; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="w-64 bg-surface-dim flex flex-col border-r border-outline-variant/10 shrink-0">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<img alt="User Avatar" class="w-10 h-10 rounded-xl bg-primary/10 p-1" data-alt="Security shield icon logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBLMx32quWNlCE3dDnIm2CucFqDHb2Bp3SbagJOMLKd2-ywuOqLFFLzs4XeaVnmjgDCULAXgC8KQTY3C0ammz31Frm9QXhd6lYG7A65haBx-GGsEC0K94fQSh3TVbPBcloD-UWZ06xRfQY1_6ktMJmbWh2m2GmOHbRJqoxybzhvog4WBzOZyh4gX63lIfbIt3m_mVI6pjHXvt7sf3a2Nx1ic607VW2-3U-JG5suCPdvTXm4RYXu9Xu87KEleDmtZqsFk47KqZKRl4"/>
+<div>
+<h2 class="text-sm font-bold text-on-surface leading-none">Security Admin</h2>
+<p class="text-[10px] text-on-surface-variant mt-1">Vulnerability Management</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">radar</span>
+<span class="text-sm">Scans</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="text-sm">Assets</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-surface-container-highest text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">bug_report</span>
+<span class="text-sm">Findings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- TopNavBar -->
+<header class="h-16 flex items-center justify-between px-8 bg-surface border-b border-outline-variant/10">
+<div class="flex items-center gap-4">
+<span class="text-on-surface-variant text-sm font-medium">Vulnerability Management</span>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+<h1 class="text-sm font-bold text-on-surface">Remediation Detail</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high border border-outline-variant/20">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-medium">System Secure</span>
+</div>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant/30" data-alt="Abstract profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg6Wwu1BXXevjhEM5JIE3WzhMrcxquSJ1stJBExjEaM0VER2AJWMFPl943O7rkHCVwLvlQLoSZxvmyzAgYXz_oBWyzfsGxJeVTjfJdrAfQgng1TrYX_MHig3KdeEspwlfkR1ap1wNRYD2iRZthNuCEm1dVok79Z1cf0G45gxAl0iVWxmNVUtiGrlXB5iOzmo2yim8lCnIYrgemTg0XepE4LMP9enfP72zri_zMH3URApHU2GOPpfXpgQ9HtTpJarWypXJhFkyNlSY"/>
+</div>
+</header>
+<!-- Scrollable Area -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<!-- Hero CVE Header: Asymmetric Bento Section -->
+<section class="grid grid-cols-12 gap-6">
+<!-- Primary Identity -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container p-8 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-[120px]">security</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-4 mb-4">
+<span class="px-3 py-1 rounded bg-error-container text-error text-[10px] font-bold tracking-widest uppercase">Critical Severity</span>
+<span class="text-on-surface-variant text-sm tracking-tight">Published: Oct 03, 2023</span>
+</div>
+<h2 class="text-4xl font-bold tracking-tight text-on-surface mb-4 font-headline">CVE-2023-4911</h2>
+<p class="text-on-surface-variant max-w-2xl leading-relaxed">
+                            A buffer overflow vulnerability was found in the GNU C Library's dynamic loader `ld.so` when processing the `GLIBC_TUNABLES` environment variable. This issue could allow a local attacker to gain root privileges.
+                        </p>
+</div>
+</div>
+<!-- Fast Stats -->
+<div class="col-span-12 lg:col-span-4 grid grid-cols-2 gap-4">
+<div class="bg-surface-container-high p-6 rounded-xl flex flex-col justify-between border-l-2 border-error">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">CVSS Score</span>
+<div class="mt-2">
+<span class="text-3xl font-bold text-on-surface">9.8</span>
+<span class="text-xs text-error block mt-1">Critical Impact</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl flex flex-col justify-between border-l-2 border-primary">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">EPSS Prob</span>
+<div class="mt-2">
+<span class="text-3xl font-bold text-on-surface">0.85</span>
+<span class="text-xs text-primary block mt-1">High Likelihood</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl flex flex-col justify-between border-l-2 border-tertiary-container">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">KEV Status</span>
+<div class="mt-2">
+<span class="text-xl font-bold text-tertiary-container">Exploited</span>
+<span class="text-xs text-on-surface-variant block mt-1">Known in Wild</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl flex flex-col justify-between">
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Assets</span>
+<div class="mt-2">
+<span class="text-3xl font-bold text-on-surface">14</span>
+<span class="text-xs text-on-surface-variant block mt-1">Impacted nodes</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Remediation Actions -->
+<section class="flex flex-wrap items-center gap-4 py-2 border-y border-outline-variant/10">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                    Mark as Resolved
+                </button>
+<button class="bg-surface-container-highest text-on-surface px-6 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 border border-outline-variant/20 hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+                    Assign Owner
+                </button>
+<button class="text-primary px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/5 transition-colors">
+                    Export Analysis
+                </button>
+</section>
+<!-- Layout Split: Remediation vs Assets/Timeline -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Guide & Code -->
+<div class="col-span-12 xl:col-span-7 space-y-8">
+<div class="bg-surface-container p-8 rounded-xl">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<h3 class="text-xl font-bold">AI Remediation Guide</h3>
+</div>
+<div class="space-y-6 text-on-surface-variant leading-relaxed">
+<p>To address <span class="text-on-surface font-semibold">Looney Tunables</span> (CVE-2023-4911), you must update the GNU C Library to the latest patched version. For Debian/Ubuntu-based systems, execute the following commands:</p>
+<div class="bg-surface-container-lowest p-5 rounded-lg font-mono text-sm border border-outline-variant/10 relative group">
+<div class="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-xs cursor-pointer hover:text-primary">content_copy</span>
+</div>
+<code class="text-primary-fixed">sudo apt-get update &amp;&amp; sudo apt-get install --only-upgrade libc6</code>
+</div>
+<p>For RHEL/CentOS systems, use the YUM/DNF package manager:</p>
+<div class="bg-surface-container-lowest p-5 rounded-lg font-mono text-sm border border-outline-variant/10">
+<code class="text-primary-fixed">sudo dnf update glibc</code>
+</div>
+<div class="bg-primary/5 p-4 rounded-lg border-l-4 border-primary">
+<p class="text-xs font-medium text-primary uppercase mb-1">Verification Note</p>
+<p class="text-sm">After patching, restart all critical services or reboot the host to ensure the dynamic loader has reloaded the patched libraries.</p>
+</div>
+</div>
+</div>
+<!-- Affected Assets -->
+<div class="bg-surface-container rounded-xl overflow-hidden">
+<div class="p-6 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-bold">Affected Assets</h3>
+<span class="text-xs text-on-surface-variant">Showing top 5 of 14</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Hostname</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">IP Address</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">prod-web-01.internal</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">10.0.42.115</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-error/10 text-error text-[10px] font-bold">Vulnerable</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer group-hover:text-primary">arrow_forward</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">db-cluster-node-03</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">10.0.12.98</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-error/10 text-error text-[10px] font-bold">Vulnerable</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer group-hover:text-primary">arrow_forward</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group">
+<td class="px-6 py-4 text-sm font-medium">stg-app-svc-09</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-mono">172.16.5.21</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">Patching...</span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer group-hover:text-primary">arrow_forward</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Column: Timeline & Related -->
+<div class="col-span-12 xl:col-span-5 space-y-8">
+<!-- Remediation History -->
+<div class="bg-surface-container-low p-8 rounded-xl">
+<h3 class="font-bold mb-8">Remediation History</h3>
+<div class="relative">
+<div class="absolute left-3 top-0 bottom-0 w-[1px] bg-outline-variant/30"></div>
+<div class="space-y-10 relative">
+<div class="flex gap-6 relative">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center shrink-0 z-10 shadow-[0_0_15px_rgba(0,218,243,0.3)]">
+<span class="material-symbols-outlined text-on-primary text-[14px]">bolt</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Patching Initiated</p>
+<p class="text-[11px] text-on-surface-variant mt-1">Today, 09:42 AM • by automation-bot</p>
+</div>
+</div>
+<div class="flex gap-6 relative">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant/40 flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]">auto_fix</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Remediation Plan Generated</p>
+<p class="text-[11px] text-on-surface-variant mt-1">Oct 12, 02:15 PM • by Sentinel AI</p>
+</div>
+</div>
+<div class="flex gap-6 relative">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest border border-outline-variant/40 flex items-center justify-center shrink-0 z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]">warning</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Vulnerability Detected</p>
+<p class="text-[11px] text-on-surface-variant mt-1">Oct 12, 11:04 AM • Network Scan #421</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Findings -->
+<div class="bg-surface-container p-8 rounded-xl">
+<h3 class="font-bold mb-6">Related Findings</h3>
+<div class="space-y-4">
+<div class="p-4 rounded-lg bg-surface-container-high border-l-2 border-error hover:bg-surface-bright transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-mono font-bold text-on-surface">CVE-2023-4806</span>
+<span class="text-[10px] text-error font-bold tracking-tighter uppercase">High</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-snug">glibc: potential use-after-free in getaddrinfo</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-high border-l-2 border-tertiary-container hover:bg-surface-bright transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="text-xs font-mono font-bold text-on-surface">CVE-2023-4527</span>
+<span class="text-[10px] text-tertiary-container font-bold tracking-tighter uppercase">Medium</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-snug">glibc: buffer overflow in getaddrinfo with AF_INET6</p>
+</div>
+<div class="pt-2">
+<a class="text-xs font-bold text-primary flex items-center gap-1 hover:underline" href="#">
+                                    View all 8 related vulnerabilities
+                                    <span class="material-symbols-outlined text-[14px]">trending_flat</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Pulse Card (Custom Aesthetic) -->
+<div class="bg-surface-container p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<div class="flex items-center justify-between relative z-10">
+<div>
+<h4 class="text-xs font-bold text-primary tracking-widest uppercase">Health Pulse</h4>
+<p class="text-lg font-bold mt-1">Threat Context</p>
+</div>
+<div class="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center">
+<div class="w-4 h-4 rounded-full bg-primary animate-ping"></div>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant mt-4 leading-relaxed relative z-10">
+                            Active exploitation attempts for this CVE have increased by <span class="text-on-surface font-bold">22%</span> in your sector over the last 24 hours.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

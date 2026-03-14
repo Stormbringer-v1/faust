@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Faust Vulnerability Report</title>
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --ink: #1b1f2a;
+        --muted: #5b6472;
+        --border: #d9dee7;
+        --critical: #9b1c1c;
+        --high: #b45309;
+        --medium: #b91c1c;
+        --low: #2563eb;
+        --info: #4b5563;
+        --accent: #1f2937;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        line-height: 1.5;
+      }
+      .page {
+        max-width: 1080px;
+        margin: 32px auto;
+        background: #ffffff;
+        padding: 36px 40px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 16px;
+        margin-bottom: 24px;
+      }
+      .brand {
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: 0.08em;
+        color: var(--accent);
+      }
+      h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+      h2 {
+        margin-top: 28px;
+        font-size: 20px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+      }
+      h3 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+      }
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        background: #f9fafb;
+      }
+      .severity-bar {
+        display: flex;
+        height: 14px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #e5e7eb;
+        margin-top: 12px;
+      }
+      .sev-critical { background: var(--critical); }
+      .sev-high { background: var(--high); }
+      .sev-medium { background: var(--medium); }
+      .sev-low { background: var(--low); }
+      .sev-info { background: var(--info); }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+        font-size: 13px;
+      }
+      th, td {
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        vertical-align: top;
+      }
+      th {
+        background: #f3f4f6;
+        text-align: left;
+      }
+      .pill {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: #ffffff;
+      }
+      .pill.critical { background: var(--critical); }
+      .pill.high { background: var(--high); }
+      .pill.medium { background: var(--medium); }
+      .pill.low { background: var(--low); }
+      .pill.info { background: var(--info); }
+      .finding-card {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-top: 16px;
+        background: #ffffff;
+      }
+      pre {
+        white-space: pre-wrap;
+        background: #f3f4f6;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div>
+          <div class="brand">FAUST</div>
+          <div class="muted">Vulnerability Report</div>
+        </div>
+        <div class="muted">
+          <div>Project: {{ project.name }}</div>
+          <div>Generated: {{ generated_at }}</div>
+        </div>
+      </header>
+
+      <section>
+        <h2>Executive Summary</h2>
+        <div class="summary-grid">
+          <div class="card">
+            <div class="muted">Total Findings</div>
+            <strong>{{ summary.total_findings }}</strong>
+          </div>
+          <div class="card">
+            <div class="muted">Total Assets</div>
+            <strong>{{ summary.total_assets }}</strong>
+          </div>
+          <div class="card">
+            <div class="muted">Total Scans</div>
+            <strong>{{ summary.total_scans }}</strong>
+          </div>
+        </div>
+
+        <div class="severity-bar">
+          <div class="sev-critical" style="width: {{ summary.by_severity_pct.critical }}%"></div>
+          <div class="sev-high" style="width: {{ summary.by_severity_pct.high }}%"></div>
+          <div class="sev-medium" style="width: {{ summary.by_severity_pct.medium }}%"></div>
+          <div class="sev-low" style="width: {{ summary.by_severity_pct.low }}%"></div>
+          <div class="sev-info" style="width: {{ summary.by_severity_pct.info }}%"></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Severity</th>
+              <th>Count</th>
+              <th>Status</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Critical</td>
+              <td>{{ summary.by_severity.critical }}</td>
+              <td>Open</td>
+              <td>{{ summary.by_status.open }}</td>
+            </tr>
+            <tr>
+              <td>High</td>
+              <td>{{ summary.by_severity.high }}</td>
+              <td>Confirmed</td>
+              <td>{{ summary.by_status.confirmed }}</td>
+            </tr>
+            <tr>
+              <td>Medium</td>
+              <td>{{ summary.by_severity.medium }}</td>
+              <td>Resolved</td>
+              <td>{{ summary.by_status.resolved }}</td>
+            </tr>
+            <tr>
+              <td>Low</td>
+              <td>{{ summary.by_severity.low }}</td>
+              <td>False Positive</td>
+              <td>{{ summary.by_status.false_positive }}</td>
+            </tr>
+            <tr>
+              <td>Info</td>
+              <td>{{ summary.by_severity.info }}</td>
+              <td>Accepted Risk</td>
+              <td>{{ summary.by_status.accepted_risk }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Top CVEs</h2>
+        {% if top_cves %}
+        <table>
+          <thead>
+            <tr>
+              <th>CVE</th>
+              <th>Max Risk Score</th>
+              <th>Finding Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cve in top_cves %}
+            <tr>
+              <td>{{ cve.cve_id }}</td>
+              <td>{{ cve.max_risk_score }}</td>
+              <td>{{ cve.finding_count }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="muted">No CVE data available.</p>
+        {% endif %}
+      </section>
+
+      <section>
+        <h2>Findings Overview</h2>
+        {% if findings %}
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>CVE</th>
+              <th>Risk Score</th>
+              <th>Asset</th>
+              <th>Scanner</th>
+              <th>Created</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for finding in findings %}
+            <tr>
+              <td>{{ finding.title }}</td>
+              <td>
+                <span class="pill {{ finding.severity }}">{{ finding.severity }}</span>
+              </td>
+              <td>{{ finding.status }}</td>
+              <td>{{ finding.cve_id or "-" }}</td>
+              <td>{{ finding.risk_score if finding.risk_score is not none else "-" }}</td>
+              <td>{{ finding.asset_identifier }}</td>
+              <td>{{ finding.scanner_name or "-" }}</td>
+              <td>{{ finding.created_at }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="muted">No findings available for this report.</p>
+        {% endif %}
+      </section>
+
+      <section>
+        <h2>Finding Details</h2>
+        {% for finding in findings %}
+        <div class="finding-card">
+          <h3>{{ finding.title }}</h3>
+          <div class="muted">Asset: {{ finding.asset_identifier }} | Severity: {{ finding.severity }}</div>
+          <p>{{ finding.description }}</p>
+          {% if finding.ai_remediation %}
+          <strong>AI Remediation</strong>
+          <pre>{{ finding.ai_remediation }}</pre>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </section>
+    </div>
+  </body>
+</html>
