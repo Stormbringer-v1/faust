@@ -40,6 +40,11 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_HEADERS = {
+    "User-Agent": "FaustVulnSync/0.1 (+https://github.com/faust)",
+    "Accept": "application/json,text/csv,*/*",
+}
+
 CISA_KEV_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
 
 
@@ -63,7 +68,7 @@ class CISAKEVClient:
         logger.info("CISAKEVClient: downloading KEV catalog from %s", CISA_KEV_URL)
 
         try:
-            async with httpx.AsyncClient(timeout=30.0) as client:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=True, headers=DEFAULT_HEADERS) as client:
                 response = await client.get(CISA_KEV_URL)
                 response.raise_for_status()
                 data = response.json()

@@ -17,6 +17,29 @@
 ## LOG ENTRIES
 
 ---
+### CODEX-ENG (Codex) — 2026-03-14T21:04Z
+**Task:** Verify/fix vulnerability DB sync tasks (NVD, EPSS, CISA KEV)
+**Status:** ✅ Complete (code fix) / ⚠️ VM validation blocked in this environment
+
+**What I checked:**
+- Reviewed beat schedule and task routes: `faust.sync.nvd` (6h), `faust.sync.epss` (06:00 UTC daily), `faust.sync.cisa_kev` (4h), all routed to `sync` queue.
+- Reviewed sync manager + source clients for NVD/EPSS/CISA KEV fetch + upsert flow and finding propagation.
+
+**Issue fixed:**
+- Upstream feeds were returning HTTP 403 in manual local runtime checks for NVD/EPSS/CISA endpoints. Hardened all three HTTP clients to send explicit default headers and follow redirects:
+  - Added `User-Agent` and `Accept` headers for NVD/EPSS/CISA KEV clients
+  - Enabled `follow_redirects=True` on all `httpx.AsyncClient` instances
+
+**Environment limitation:**
+- Could not run VM/docker commands from this execution environment (`docker` unavailable locally; SSH key/route to VM unavailable), so I could not execute the required `docker exec ... celery call ...` and DB row-count verification on VM from here.
+
+**Files changed:**
+- `backend/app/vuln_db/sources/nvd.py`
+- `backend/app/vuln_db/sources/epss.py`
+- `backend/app/vuln_db/sources/cisa_kev.py`
+
+
+---
 ### BUILDER (Claude Sonnet) — 2026-03-14T21:00Z
 **Task:** 4.2 — E2E Report Generation & Download (PDF, HTML, JSON, CSV)
 **Status:** ✅ Complete

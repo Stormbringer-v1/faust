@@ -31,6 +31,11 @@ import httpx
 from app.core.config import get_settings
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_HEADERS = {
+    "User-Agent": "FaustVulnSync/0.1 (+https://github.com/faust)",
+    "Accept": "application/json,text/csv,*/*",
+}
 settings = get_settings()
 
 EPSS_URL = "https://epss.cyentia.com/epss_scores-current.csv.gz"
@@ -56,7 +61,7 @@ class EPSSClient:
         logger.info("EPSSClient: downloading EPSS scores from %s", EPSS_URL)
 
         try:
-            async with httpx.AsyncClient(timeout=60.0) as client:
+            async with httpx.AsyncClient(timeout=60.0, follow_redirects=True, headers=DEFAULT_HEADERS) as client:
                 response = await client.get(EPSS_URL)
                 response.raise_for_status()
         except Exception as e:
