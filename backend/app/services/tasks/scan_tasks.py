@@ -43,10 +43,16 @@ def run_scan(self, scan_id: str) -> dict:
 
     async def _run() -> dict:
         from sqlalchemy import select
+        from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+        from sqlalchemy.pool import NullPool
 
-        from app.core.database import AsyncSessionLocal
+        from app.core.config import get_settings
         from app.models.scan import Scan, ScanStatus
         from app.services.scanners.base import ScannerFactory, ScannerError
+
+        _settings = get_settings()
+        _engine = create_async_engine(_settings.database_url, poolclass=NullPool)
+        AsyncSessionLocal = async_sessionmaker(bind=_engine, class_=AsyncSession, expire_on_commit=False)
 
         async with AsyncSessionLocal() as db:
             # Load scan record
@@ -162,6 +168,8 @@ def run_scan(self, scan_id: str) -> dict:
                 scan.completed_at = datetime.now(timezone.utc)
                 await db.commit()
                 raise
+            finally:
+                await _engine.dispose()
 
     try:
         return asyncio.run(_run())

@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig } from 'axios';
+import axios, { type InternalAxiosRequestConfig } from 'axios';
 
 const api = axios.create({
   baseURL: '/api/v1',
@@ -49,10 +49,9 @@ api.interceptors.response.use(
         // Retry original request
         return api(originalRequest);
       } catch (refreshError) {
-        // If refresh fails, log out
+        // If refresh fails, clear tokens (React auth state will handle redirect)
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }

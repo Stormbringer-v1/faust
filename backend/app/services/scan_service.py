@@ -161,6 +161,7 @@ async def create_scan(
         # Celery not configured yet — scan stays PENDING
         pass
 
+    await db.refresh(scan)
     return scan
 
 

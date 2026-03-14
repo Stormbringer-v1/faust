@@ -3,14 +3,13 @@ import { SeverityDonut } from '../components/dashboard/SeverityDonut';
 import { RiskTrendChart } from '../components/dashboard/RiskTrendChart';
 import { TopAssetsTable } from '../components/dashboard/TopAssetsTable';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
-import { useProjects } from '../hooks/useProjects';
+import { useProject } from '../contexts/ProjectContext';
 import { useFindings } from '../hooks/useFindings';
 import { useAssets } from '../hooks/useAssets';
 
 export default function DashboardPage() {
-  const { projects } = useProjects();
-  // Using the first project by default, or you can add a project selector
-  const defaultProjectId = projects?.[0]?.id;
+  const { selectedProject } = useProject();
+  const defaultProjectId = selectedProject?.id;
   
   const { findings, loading: findingsLoading } = useFindings(defaultProjectId);
   const { assets, loading: assetsLoading } = useAssets(defaultProjectId);

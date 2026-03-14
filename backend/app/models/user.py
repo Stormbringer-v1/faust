@@ -41,7 +41,7 @@ class User(UUIDMixin, TimestampMixin, Base):
     role: Mapped[UserRole] = mapped_column(
         String(20),
         nullable=False,
-        default=UserRole.VIEWER,
+        default=UserRole.ANALYST,
     )
     is_active: Mapped[bool] = mapped_column(
         Boolean,

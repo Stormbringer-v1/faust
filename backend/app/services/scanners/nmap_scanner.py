@@ -29,10 +29,10 @@ settings = get_settings()
 
 # ── Scan profiles ─────────────────────────────────────────────────────
 NMAP_PROFILES: dict[str, list[str]] = {
-    "quick": ["-sS", "-sV", "--top-ports", "100", "-T4"],
-    "standard": ["-sS", "-sV", "-sC", "-O", "-T3"],
-    "thorough": ["-sS", "-sV", "-sC", "-O", "-A", "--script", "vuln", "-T2"],
-    "stealth": ["-sS", "-T1", "--scan-delay", "1s"],
+    "quick": ["-sT", "-sV", "--top-ports", "100", "-T4"],
+    "standard": ["-sT", "-sV", "-sC", "-T3"],
+    "thorough": ["-sT", "-sV", "-sC", "-A", "--script", "vuln", "-T2"],
+    "stealth": ["-sT", "-T1", "--scan-delay", "1s"],
 }
 
 

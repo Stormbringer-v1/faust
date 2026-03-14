@@ -1,13 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { type ReactElement } from 'react';
 import Layout from './layouts/MainLayout';
 import DashboardPage from './pages/DashboardPage';
 import FindingsPage from './pages/FindingsPage';
 import AssetsPage from './pages/Assets';
 import ScansPage from './pages/Scans';
+import ReportsPage from './pages/Reports';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { ProjectProvider } from './contexts/ProjectContext';
 
-function ProtectedRoute({ children }: { children: JSX.Element }) {
+function ProtectedRoute({ children }: { children: ReactElement }) {
   const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
 
@@ -19,7 +22,7 @@ function ProtectedRoute({ children }: { children: JSX.Element }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return children;
+  return <ProjectProvider>{children}</ProjectProvider>;
 }
 
 function App() {
@@ -34,6 +37,7 @@ function App() {
             <Route path="assets" element={<AssetsPage />} />
             <Route path="scans" element={<ScansPage />} />
             <Route path="findings" element={<FindingsPage />} />
+            <Route path="reports" element={<ReportsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

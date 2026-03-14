@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import api from '../services/api';
-import { useProjects } from '../hooks/useProjects';
+import { useProject } from '../contexts/ProjectContext';
 import { useScans } from '../hooks/useScans';
 
 const scanTypes = [
@@ -27,8 +27,8 @@ const statusBadge: Record<string, string> = {
 };
 
 export default function ScansPage() {
-  const { projects } = useProjects();
-  const projectId = projects?.[0]?.id;
+  const { selectedProject } = useProject();
+  const projectId = selectedProject?.id;
   const { scans, loading: scansLoading, error: scansError, refresh } = useScans(projectId);
 
   const [scanType, setScanType] = useState('network');

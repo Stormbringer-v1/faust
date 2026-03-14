@@ -21,17 +21,25 @@ def generate_report(self, report_id: str) -> dict:
     Generates report content via ReportGenerator and updates status accordingly.
     """
     import asyncio
-    from app.core.database import AsyncSessionLocal
+    from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+    from sqlalchemy.pool import NullPool
+    from app.core.config import get_settings
     from app.models.report import Report, ReportStatus
     from app.ai.reporting.generator import ReportGenerator
 
     async def _generate():
-        async with AsyncSessionLocal() as db:
-            generator = ReportGenerator(db)
-            file_path = await generator.generate(uuid.UUID(report_id))
-            if not file_path:
-                return {"status": "not_found", "report_id": report_id}
-            return {"status": "completed", "report_id": report_id, "file_path": file_path}
+        _settings = get_settings()
+        _engine = create_async_engine(_settings.database_url, poolclass=NullPool)
+        AsyncSessionLocal = async_sessionmaker(bind=_engine, class_=AsyncSession, expire_on_commit=False)
+        try:
+            async with AsyncSessionLocal() as db:
+                generator = ReportGenerator(db)
+                file_path = await generator.generate(uuid.UUID(report_id))
+                if not file_path:
+                    return {"status": "not_found", "report_id": report_id}
+                return {"status": "completed", "report_id": report_id, "file_path": file_path}
+        finally:
+            await _engine.dispose()
 
     try:
         return asyncio.run(_generate())

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useProjects } from '../hooks/useProjects';
+import { useProject } from '../contexts/ProjectContext';
 import { useAssets } from '../hooks/useAssets';
 import { useFindings } from '../hooks/useFindings';
 
@@ -30,8 +30,8 @@ const parseTags = (tags?: string | null): string[] => {
 };
 
 export default function AssetsPage() {
-  const { projects } = useProjects();
-  const projectId = projects?.[0]?.id;
+  const { selectedProject } = useProject();
+  const projectId = selectedProject?.id;
 
   const { assets, loading: assetsLoading, error: assetsError } = useAssets(projectId);
   const { findings, loading: findingsLoading } = useFindings(projectId);
