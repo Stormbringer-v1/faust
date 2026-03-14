@@ -12,7 +12,7 @@
 |-------|------------|--------|---------------|
 | ARCHITECT (Opus 4.6) | 2026-03-14 | ✅ Done | Phase 2 Architecture complete |
 | BUILDER (Sonnet/Antigravity) | 2026-03-14 | ✅ Done | Tasks 3.4 + 3.5 complete — E2E scan pipeline proven, Reports UI added |
-| RAPID-ENG (Gemini 3.1 Pro) | — | 🟡 Idle | — |
+| RAPID-ENG (Gemini 3.1 Pro) | 2026-03-14 | ✅ Done | UI/UX Audit & Layout Fixes complete |
 | DESIGNER (Google Stitch) | — | 🟡 Idle | — |
 
 ## OPEN BLOCKERS
@@ -27,7 +27,63 @@ _None._
 
 ## LOG ENTRIES
 
+## LOG ENTRIES
+
 <!-- New entries go HERE, above older entries -->
+---
+### RAPID-ENG (Gemini 3.1 Pro) — 2026-03-14 (Session 2)
+
+**Task:** Perform full UI/UX audit of internal pages and fix major usability issues.
+**Status:** ✅ Complete
+**Tests:** Verified via browser subagent — layout constrained, chart themed, dropdown fixed.
+
+**Work Done:**
+- **UI/UX Audit:** Using the browser subagent, audited the Dashboard, Scans, and Assets pages. Identified sprawling layouts on wide screens, broken project selector dropdown alignment, and mixed themes on the dashboard charts.
+- **Fixed `MainLayout.tsx`:**
+    - Wrapped the main content area in a `max-w-7xl mx-auto w-full` container to prevent infinite horizontal scrolling/stretching.
+    - Fixed the Project Selector dropdown alignment from `right-0` to `left-0`.
+    - Added a `useEffect` hook to automatically close the Project Selector when navigating routes.
+    - Increased sidebar icon size (`w-5` -> `w-6`) for better click target visibility.
+- **Fixed `RiskTrendChart.tsx`:** Replaced out-of-place dark Material Design CSS classes with light Tailwind generic classes (`bg-white border border-slate-200`) to match the rest of the Dashboard cards.
+- **Deployed:** Synced frontend changes to VM and rebuilt the `frontend` container. 
+- **Documentation:** Updated `walkthrough.md` with visual proof of the fixes.
+
+**Files Modified:**
+- `frontend/src/layouts/MainLayout.tsx`
+- `frontend/src/components/dashboard/RiskTrendChart.tsx`
+- `AGENTS_LOG.md`
+
+**Next Steps:**
+- Project looks solid visually. Ready for further E2E integration testing or user validation.
+
+---
+### RAPID-ENG (Gemini 3.1 Pro) — 2026-03-14
+
+**Task:** Fix "messed up" GUI at /login; implement brand color palette
+**Status:** ✅ Complete
+**Tests:** Verified via browser subagent — buttons visible, inputs refined, logo enhanced
+
+**Work Done:**
+- **Identified Theme Gap:** Discovered that the `brand` color family was used in components but not defined in `index.css`, making primary buttons invisible.
+- **Implemented Brand Palette:** Added a premium deep-blue palette (`brand-50` to `brand-950`) to the Tailwind v4 theme in `index.css`.
+- **Refined Login Page:** 
+    - Fixed the "Sign in" button visibility.
+    - Reduced input field padding from `py-2` to `py-1.5` for a tighter, more modern look.
+    - Enhanced the `Shield` logo with `fill-brand-600/10` and a subtle glow.
+- **Improved Layout:** Standardized logo styling in `MainLayout.tsx`.
+- **Deployment & Verification:** 
+    - Rsync'd changes to the VM (`192.168.50.10`).
+    - Rebuilt and restarted the frontend container.
+    - Verified all fixes via interactive browser session.
+
+**Files Modified:**
+- `frontend/src/index.css`
+- `frontend/src/pages/Login.tsx`
+- `frontend/src/layouts/MainLayout.tsx`
+
+**Next Steps:**
+- Proceed with any remaining Phase 3 integration tasks as defined in `PROJECT_PLAN.md`.
+
 
 ---
 ### ARCHITECT (Claude Opus 4.6) — 2026-03-14

@@ -26,7 +26,16 @@ export default function Login() {
       await login(email, password);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.detail || (mode === 'register' ? 'Registration failed.' : 'Login failed. Please check your credentials.'));
+      let errorMessage = mode === 'register' ? 'Registration failed.' : 'Login failed. Please check your credentials.';
+      const detail = err.response?.data?.detail;
+      
+      if (typeof detail === 'string') {
+        errorMessage = detail;
+      } else if (Array.isArray(detail)) {
+        errorMessage = detail.map((e: any) => `${e.loc[e.loc.length - 1]}: ${e.msg}`).join(', ');
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -36,7 +45,10 @@ export default function Login() {
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <Shield className="w-12 h-12 text-brand-600" />
+          <div className="relative">
+            <Shield className="w-12 h-12 text-brand-600 fill-brand-600/10" />
+            <div className="absolute inset-0 bg-brand-500/5 blur-xl rounded-full -z-10" />
+          </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900">
           {mode === 'login' ? 'Sign in to FAUST' : 'Create your account'}
@@ -74,7 +86,7 @@ export default function Login() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
+                    className="appearance-none block w-full px-3 py-1.5 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
                     placeholder="Your name"
                   />
                 </div>
@@ -94,7 +106,7 @@ export default function Login() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-1.5 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
                 />
               </div>
             </div>
@@ -112,7 +124,7 @@ export default function Login() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
+                  className="appearance-none block w-full px-3 py-1.5 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm"
                 />
               </div>
               {mode === 'register' && (

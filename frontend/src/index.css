@@ -58,6 +58,19 @@
   --radius-lg: 0.25rem;
   --radius-xl: 0.5rem;
   --radius-full: 0.75rem;
+
+  /* Brand Palette - Deep Premium Blue */
+  --color-brand-50: #f0f7ff;
+  --color-brand-100: #e0effe;
+  --color-brand-200: #bae0fd;
+  --color-brand-300: #7cc8fb;
+  --color-brand-400: #38abf8;
+  --color-brand-500: #0e91e9;
+  --color-brand-600: #0274c7;
+  --color-brand-700: #035ca1;
+  --color-brand-800: #074e85;
+  --color-brand-900: #0c426e;
+  --color-brand-950: #082a49;
 }
 
 @layer base {

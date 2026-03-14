@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { Shield, LayoutDashboard, AlertCircle, Settings, LogOut, Radar, Server, FileText, ChevronDown, Plus, FolderOpen } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useProject } from '../contexts/ProjectContext';
 
 function ProjectSelector() {
   const { projects, selectedProject, setSelectedProject, createProject } = useProject();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [name, setName] = useState('');
@@ -24,6 +25,11 @@ function ProjectSelector() {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  // Auto-close on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   const handleCreate = async () => {
     if (!name.trim()) { setCreateError('Name is required.'); return; }
@@ -56,7 +62,7 @@ function ProjectSelector() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-72 bg-white border border-slate-200 rounded-xl shadow-lg z-50">
+        <div className="absolute left-0 top-full mt-1 w-72 bg-white border border-slate-200 rounded-xl shadow-lg z-50">
           {projects.length > 0 && (
             <ul className="py-1 max-h-48 overflow-auto">
               {projects.map((p) => (
@@ -143,7 +149,7 @@ export default function MainLayout() {
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-slate-800 bg-slate-950">
-          <Shield className="w-6 h-6 text-brand-500 mr-3" />
+          <Shield className="w-6 h-6 text-brand-500 fill-brand-500/10 mr-3" />
           <span className="text-lg font-bold text-white tracking-wide">FAUST</span>
         </div>
 
@@ -156,7 +162,7 @@ export default function MainLayout() {
               }`
             }
           >
-            <LayoutDashboard className="w-5 h-5 mr-3" />
+            <LayoutDashboard className="w-6 h-6 mr-3" />
             Dashboard
           </NavLink>
           <NavLink
@@ -167,7 +173,7 @@ export default function MainLayout() {
               }`
             }
           >
-            <Radar className="w-5 h-5 mr-3" />
+            <Radar className="w-6 h-6 mr-3" />
             Scans
           </NavLink>
           <NavLink
@@ -178,7 +184,7 @@ export default function MainLayout() {
               }`
             }
           >
-            <Server className="w-5 h-5 mr-3" />
+            <Server className="w-6 h-6 mr-3" />
             Assets
           </NavLink>
           <NavLink
@@ -189,7 +195,7 @@ export default function MainLayout() {
               }`
             }
           >
-            <AlertCircle className="w-5 h-5 mr-3" />
+            <AlertCircle className="w-6 h-6 mr-3" />
             Findings
           </NavLink>
           <NavLink
@@ -200,21 +206,21 @@ export default function MainLayout() {
               }`
             }
           >
-            <FileText className="w-5 h-5 mr-3" />
+            <FileText className="w-6 h-6 mr-3" />
             Reports
           </NavLink>
         </nav>
 
         <div className="p-4 border-t border-slate-800">
           <button className="flex items-center w-full px-4 py-3 text-sm hover:bg-slate-800 hover:text-white rounded-lg transition-colors mb-1">
-            <Settings className="w-5 h-5 mr-3" />
+            <Settings className="w-6 h-6 mr-3" />
             Settings
           </button>
           <button
             onClick={logout}
             className="flex items-center w-full px-4 py-3 text-sm hover:bg-red-900/50 hover:text-red-400 rounded-lg transition-colors text-slate-400"
           >
-            <LogOut className="w-5 h-5 mr-3" />
+            <LogOut className="w-6 h-6 mr-3" />
             Log out
           </button>
         </div>
@@ -235,9 +241,11 @@ export default function MainLayout() {
           </div>
         </header>
 
-        {/* Page Content */}
+        {/* Page Content Constrained to max width */}
         <div className="flex-1 overflow-auto p-8">
-          <Outlet />
+          <div className="max-w-7xl mx-auto w-full">
+            <Outlet />
+          </div>
         </div>
       </main>
     </div>
