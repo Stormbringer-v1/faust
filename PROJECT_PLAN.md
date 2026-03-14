@@ -33,15 +33,13 @@
 ## 🤖 TOOLCHAIN & AGENT ROSTER
 
 ### ⚠️ Current Agent Availability (Rate Limits)
-- **Active Now:** Gemini 3.1 Pro (RAPID-ENG) and Codex 5.2 (CODEX-ENG) are fully available.
-- **Temporarily Paused:** Claude Code (ARCHITECT/BUILDER) quotas are burned and will reset in ~3 hours.
-- **Workflow:** For now, all tasks go to Gemini and Codex.
+- **Active Now:** All agents are currently active and available.
 
 ### Roster
 | Agent | Tool | Primary Role | Status |
 |---|---|---|---|
-| **Claude Opus 4.6** | Claude Code CLI | **ARCHITECT** — Security-critical code, engine design, DB models | ⏳ Paused (3 hours) |
-| **Claude Sonnet 4.6**| Claude Code CLI | **BUILDER** — Core integration, APIs, complex implementations | ⏳ Paused (3 hours) |
+| **Claude Opus 4.6** | Claude Code CLI | **ARCHITECT** — Security-critical code, engine design, DB models | 🟢 ACTIVE |
+| **Claude Sonnet 4.6**| Claude Code CLI | **BUILDER** — Core integration, APIs, complex implementations | 🟢 ACTIVE |
 | **Gemini 3.1 Pro** | Antigravity IDE / Gemini CLI | **RAPID-ENG** — Frontend scaffolding, quick fixes, bulk generation, Python wiring | 🟢 ACTIVE |
 | **Codex 5.2** | OpenAI CLI | **CODEX-ENG** — Targeted coding tasks, parallel execution, parsing, templates | 🟢 ACTIVE |
 
@@ -51,6 +49,58 @@ You go to an agent, tell them to read `FAUST.md`, `AGENTS_LOG.md`, and `PROJECT_
 ---
 
 ## 📋 AGENT PROMPTS — COPY AND PASTE
+
+### For ARCHITECT (Claude Opus 4.6)
+```text
+You are ARCHITECT working on Project FAUST — an open-source, enterprise-grade vulnerability management platform.
+
+## MANDATORY FIRST STEPS
+1. Read `FAUST.md` — project spec and source of truth
+2. Read `AGENTS_LOG.md` — shared work journal
+3. Read `PROJECT_PLAN.md` (this file) — find your current assigned task below.
+
+## PROJECT LOCATION
+- Local: /Users/robertharutyunyan/Documents/antigravity/vuln-scanner
+- VM: 192.168.50.10 → /root/faust (via rsync)
+
+## 🚨 RULE ZERO
+You are in the LOCAL project directory. You CAN create and edit files here.
+You CANNOT run anything here — no docker, no pytest. All execution happens on the VM after rsync.
+
+## YOUR IMMEDIATE TASK
+Look in the "CURRENT ASSIGNMENTS" section below for any tasks tagged `ARCHITECT`.
+
+## AFTER COMPLETING WORK
+1. Append your session log to `AGENTS_LOG.md`.
+2. Update the checkboxes in `PROJECT_PLAN.md`.
+3. Inform the human exactly what to do next.
+```
+
+### For BUILDER (Claude Sonnet 4.6)
+```text
+You are BUILDER working on Project FAUST.
+
+## MANDATORY FIRST STEPS
+1. Read `FAUST.md`
+2. Read `AGENTS_LOG.md`
+3. Read `PROJECT_PLAN.md`
+
+## PROJECT LOCATION
+- Local: /Users/robertharutyunyan/Documents/antigravity/vuln-scanner
+- VM: 192.168.50.10 → /root/faust (via rsync)
+
+## 🚨 RULE ZERO
+You are in the LOCAL project directory. You CAN create and edit files here.
+You CANNOT run anything here — no docker, no pytest. All execution happens on the VM after rsync.
+
+## YOUR IMMEDIATE TASK
+Look in the "CURRENT ASSIGNMENTS" section below for any tasks tagged `BUILDER`.
+
+## AFTER COMPLETING WORK
+1. Append your session log to `AGENTS_LOG.md`.
+2. Update the checkboxes in `PROJECT_PLAN.md`.
+3. Inform the human exactly what to do next.
+```
 
 ### For RAPID-ENG (Gemini 3.1 Pro)
 ```text
@@ -128,7 +178,7 @@ The following tasks are active. Agents should claim their assigned task, complet
   - **Goal:** Fetch real data for `SeverityDonut`, `RiskTrendChart`, and `TopAssetsTable` via real FastAPI endpoints. 
 
 ### Priority 2: Remaining UI Screens
-- [ ] **Task 3.3 — Asset Inventory & Scan Config (`RAPID-ENG` or `CODEX-ENG`)**
+- [x] **Task 3.3 — Asset Inventory & Scan Config (`RAPID-ENG` or `CODEX-ENG`)**
   - **Location:** `frontend/src/pages/Assets.tsx` and `frontend/src/pages/Scans.tsx`
   - **Goal:** Implement the Asset Inventory and New Scan screens based on Stitch exports. Hook them up to the backend.
 

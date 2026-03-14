@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import Layout from './layouts/MainLayout';
 import DashboardPage from './pages/DashboardPage';
 import FindingsPage from './pages/FindingsPage';
+import AssetsPage from './pages/Assets';
+import ScansPage from './pages/Scans';
 import Login from './pages/Login';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 
@@ -29,6 +31,8 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="assets" element={<AssetsPage />} />
+            <Route path="scans" element={<ScansPage />} />
             <Route path="findings" element={<FindingsPage />} />
           </Route>
         </Routes>

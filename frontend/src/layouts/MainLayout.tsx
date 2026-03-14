@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { Shield, LayoutDashboard, AlertCircle, Settings, LogOut } from 'lucide-react';
+import { Shield, LayoutDashboard, AlertCircle, Settings, LogOut, Radar, Server } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 export default function MainLayout() {
@@ -25,6 +25,28 @@ export default function MainLayout() {
           >
             <LayoutDashboard className="w-5 h-5 mr-3" />
             Dashboard
+          </NavLink>
+          <NavLink
+            to="/scans"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-3 rounded-lg transition-colors ${
+                isActive ? 'bg-brand-600 text-white' : 'hover:bg-slate-800 hover:text-white'
+              }`
+            }
+          >
+            <Radar className="w-5 h-5 mr-3" />
+            Scans
+          </NavLink>
+          <NavLink
+            to="/assets"
+            className={({ isActive }) =>
+              `flex items-center px-4 py-3 rounded-lg transition-colors ${
+                isActive ? 'bg-brand-600 text-white' : 'hover:bg-slate-800 hover:text-white'
+              }`
+            }
+          >
+            <Server className="w-5 h-5 mr-3" />
+            Assets
           </NavLink>
           <NavLink
             to="/findings"

@@ -30,6 +30,33 @@ _None._
 <!-- New entries go HERE, above older entries -->
 
 ---
+### CODEX-ENG — 2026-03-14T13:56:07Z
+
+**Task:** Task 3.3 — Asset Inventory & Scan Config UI  
+**Status:** ✅ Complete  
+**Tests:** Not run (VM-only rule)
+
+**Work Done:**
+- Implemented Assets inventory page with stats, tags parsing, risk badges, and live data via hooks.
+- Implemented Scans page with scan configuration form, backend submission, and recent scans table.
+- Added `useScans` hook and wired new `/assets` and `/scans` routes + sidebar nav links.
+- Marked Task 3.3 complete in PROJECT_PLAN.md.
+
+**Files Modified / Created:**
+- `frontend/src/pages/Assets.tsx`
+- `frontend/src/pages/Scans.tsx`
+- `frontend/src/hooks/useScans.ts` (new)
+- `frontend/src/layouts/MainLayout.tsx`
+- `frontend/src/App.tsx`
+- `PROJECT_PLAN.md`
+
+**Blockers / Dependencies:**
+- None.
+
+**Next Steps:**
+- Task 3.4 (E2E scan execution) or Task 3.5 (report generation verification).
+
+---
 ### RAPID-ENG (Gemini CLI) — 2026-03-14
 
 **Task:** Tasks 3.1 & 3.2 — Axios & Auth Wiring, Dashboard Data
