@@ -85,7 +85,8 @@ class ReportGenerator:
             report_data = await self._build_report_data(report.project_id)
 
             REPORT_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-            output_path = REPORT_OUTPUT_DIR / f"report_{report.id}.{report.report_format.value}"
+            fmt = report.report_format if isinstance(report.report_format, str) else report.report_format.value
+            output_path = REPORT_OUTPUT_DIR / f"report_{report.id}.{fmt}"
 
             if report.report_format == ReportFormat.PDF:
                 file_path = await self._render_pdf(report_data, output_path)
@@ -161,14 +162,16 @@ class ReportGenerator:
         status_counts = {status.value: 0 for status in FindingStatus}
 
         for finding, asset in finding_rows.all():
-            severity_counts[finding.severity.value] += 1
-            status_counts[finding.status.value] += 1
+            sev_key = finding.severity if isinstance(finding.severity, str) else finding.severity.value
+            sta_key = finding.status if isinstance(finding.status, str) else finding.status.value
+            severity_counts[sev_key] += 1
+            status_counts[sta_key] += 1
 
             findings.append(
                 {
                     "title": finding.title,
-                    "severity": finding.severity.value,
-                    "status": finding.status.value,
+                    "severity": sev_key,
+                    "status": sta_key,
                     "cve_id": finding.cve_id,
                     "risk_score": finding.risk_score,
                     "asset_identifier": asset.identifier,
@@ -190,7 +193,7 @@ class ReportGenerator:
         assets = [
             {
                 "identifier": asset.identifier,
-                "asset_type": asset.asset_type.value,
+                "asset_type": asset.asset_type if isinstance(asset.asset_type, str) else asset.asset_type.value,
                 "hostname": asset.hostname,
                 "finding_count": asset.finding_count,
             }

@@ -27,6 +27,7 @@ COPY . .
 
 # Non-root user for security
 RUN adduser --disabled-password --gecos "" faust && \
+    mkdir -p /app/reports && \
     chown -R faust:faust /app
 USER faust
 

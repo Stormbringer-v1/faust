@@ -44,6 +44,8 @@ services:
       REDIS_HOST: redis
     ports:
       - "8000:8000"
+    volumes:
+      - /var/faust/reports:/app/reports
     depends_on:
       postgres:
         condition: service_healthy
@@ -63,10 +65,12 @@ services:
       REDIS_HOST: redis
     command: >
       celery -A app.services.celery_app worker
-      -Q celery,scans
+      -Q celery,scans,reports
       --loglevel=info
       --concurrency=4
       --max-tasks-per-child=100
+    volumes:
+      - /var/faust/reports:/app/reports
     healthcheck:
       test: ["CMD-SHELL", "celery -A app.services.celery_app inspect ping -d celery@$$HOSTNAME --timeout 5 2>&1 | grep -q pong"]
       interval: 30s

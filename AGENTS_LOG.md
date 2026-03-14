@@ -10,11 +10,72 @@
 | Claude (COORDINATOR) | 2026-03-14 | ✅ Done | UI/UX Bug Fix & Cleanup Pass |
 | Gemini Pro (RAPID-ENG) | 2026-03-14 | ✅ Done | Documentation Sanitization |
 | Codex (CODEX-ENG) | 2026-03-14 | ✅ Done | Initial Doc Cleanup |
-| Sonnet (BUILDER) | 2026-03-14 | ✅ Done | Phase 3 Integration |
+| Sonnet (BUILDER) | 2026-03-14 | ✅ Done | Task 4.2 — E2E Report Generation |
 
 ---
 
 ## LOG ENTRIES
+
+---
+### BUILDER (Claude Sonnet) — 2026-03-14T21:00Z
+**Task:** 4.2 — E2E Report Generation & Download (PDF, HTML, JSON, CSV)
+**Status:** ✅ Complete
+
+**Bugs Fixed:**
+
+1. **`reports` queue had no consumer** — `generate_report` task uses `queue="reports"` but the celery-worker was only subscribed to `-Q celery,scans`. No worker ever consumed the queue. Fixed: added `reports` to the celery-worker command: `-Q celery,scans,reports`.
+
+2. **No shared volume for report files** — Reports are written by `celery-worker` to `/app/reports/` but downloaded by the `backend` container. Without a shared mount, the backend always got "file not found". Fixed: added bind-mount `- /var/faust/reports:/app/reports` to both `backend` and `celery-worker` in docker-compose.yml. Host directory created as `chmod 777`.
+
+3. **`AttributeError: 'str' object has no attribute 'value'`** — SQLAlchemy 2.0 returns raw strings for `String(n)` columns, not enum instances. Three call sites in `generator.py` called `.value` on already-string fields:
+   - `finding.severity.value` → `sev_key` (str-safe)
+   - `finding.status.value` → `sta_key` (str-safe)
+   - `asset.asset_type.value` → inline str-safe check
+   - `report.report_format.value` in file extension → `fmt` variable (str-safe)
+
+4. **Race condition in `report_service.create_report`** — `flush()` + `dispatch_report_task()` without a prior `commit()` meant the Celery worker could query the report record before the HTTP request's `get_db` dependency committed the transaction. Fixed: added `await db.commit()` before `dispatch_report_task()`.
+
+**E2E Verification:**
+- JSON: ✅ completed, downloaded — 4 findings from NmapE2ETest project, correct summary data
+- CSV: ✅ completed, downloaded — proper header + rows, 949 bytes
+- HTML: ✅ completed, downloaded — `<title>Faust Vulnerability Report</title>` confirmed
+- PDF: ✅ completed, downloaded — `%PDF` magic bytes confirmed, 20K WeasyPrint-generated file
+
+**Infrastructure changes:**
+- `docker/docker-compose.yml`: added `reports` to celery-worker queue, bind-mount `/var/faust/reports` for both backend and celery-worker
+- `backend/app/ai/reporting/generator.py`: fixed 4 `.value` AttributeErrors on SQLAlchemy string columns
+- `backend/app/services/report_service.py`: added `await db.commit()` before Celery task dispatch
+
+**What's next:**
+- Task 4.6 — AI Remediation E2E Test (BUILDER)
+- Tasks 4.3/4.4 — Nuclei/Trivy E2E (CODEX-ENG, needs binary installation)
+
+---
+### BUILDER (Claude Sonnet) — 2026-03-14T20:36Z
+**Task:** 4.1 — E2E Nmap Scan Pipeline Verification
+**Status:** ✅ Complete
+
+**Verification Results:**
+
+The Nmap E2E pipeline was found **already working** — no code changes were needed. Full audit performed:
+
+1. **nmap binary** — present at `/usr/bin/nmap` in both `celery-worker` and `backend` containers ✅
+2. **`scan_tasks.py`** — Celery task correctly transitions PENDING → RUNNING → COMPLETED, handles scanner errors gracefully, updates finding/severity counters ✅
+3. **`nmap_scanner.py`** — `run()` builds command, executes subprocess, calls `_parse_and_emit()` ✅
+4. **`nmap_parser.py`** — XML parsing via `xml.etree.ElementTree`, produces port findings, NSE vuln findings, OS detection findings ✅
+5. **`base.py` `_emit_finding()`** — resolves/creates Asset, deduplicates, CVE enriches from Vulnerability table, computes risk_score, persists Finding ✅
+
+**E2E Test Executed:**
+- Registered user, created project, POSTed scan (`scan_type=network`, target `172.18.0.1`)
+- Celery task `faust.scan.run` received and executed nmap
+- 4 findings parsed and stored: SSH (info), HTTP/nginx (info), PostgreSQL (low), Uvicorn/8000 (low)
+- `GET /api/v1/projects/{id}/findings/` returned all 4 findings ✅
+
+**Notable (non-blocking):** Nuclei and Trivy binaries not installed — `ScannerError` raised and caught gracefully; scan still completes. These are needed for Tasks 4.3 and 4.4.
+
+**What's next:**
+- Task 4.2 — E2E Report Generation & Download (BUILDER)
+- Tasks 4.3/4.4 — Install nuclei/trivy binaries in Dockerfile (CODEX-ENG)
 
 ---
 ### BUILDER (Claude Sonnet) — 2026-03-14T19:55Z

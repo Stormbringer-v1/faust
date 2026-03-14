@@ -95,6 +95,8 @@ async def create_report(
     db.add(report)
     await db.flush()
     await db.refresh(report)
+    # Commit before dispatching so the worker can read the record immediately
+    await db.commit()
 
     # Dispatch Celery task
     try:
