@@ -32,6 +32,10 @@ logger = logging.getLogger(__name__)
 settings = get_settings()
 
 NVD_API_BASE = "https://services.nvd.nist.gov/rest/json/cves/2.0"
+DEFAULT_HEADERS = {
+    "User-Agent": "FaustVulnSync/0.1 (+https://github.com/faust)",
+    "Accept": "application/json",
+}
 
 
 class NVDClient:
@@ -65,11 +69,17 @@ class NVDClient:
         end_str = end.strftime("%Y-%m-%dT%H:%M:%S.000")
 
         results: list[dict[str, Any]] = []
-        headers = {"apiKey": self.api_key} if self.api_key else {}
+        headers = DEFAULT_HEADERS.copy()
+        if self.api_key:
+            headers["apiKey"] = self.api_key
         results_per_page = 2000
         start_index = 0
 
-        async with httpx.AsyncClient(timeout=30.0) as client:
+        async with httpx.AsyncClient(
+            timeout=30.0,
+            follow_redirects=True,
+            headers=headers,
+        ) as client:
             while True:
                 params: dict[str, Any] = {
                     "lastModStartDate": start_str,
@@ -79,11 +89,7 @@ class NVDClient:
                 }
 
                 try:
-                    response = await client.get(
-                        NVD_API_BASE,
-                        params=params,
-                        headers=headers,
-                    )
+                    response = await client.get(NVD_API_BASE, params=params)
                     response.raise_for_status()
                     data = response.json()
                 except httpx.HTTPStatusError as e:
